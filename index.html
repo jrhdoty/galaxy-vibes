@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andromeda-Milky Way Galaxy Collision</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(10, 12, 20, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 120, 180, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            color: #c8d4e8;
+            min-width: 280px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .control-panel h1 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #8fa4c8;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(100, 120, 180, 0.2);
+        }
+
+        .control-group {
+            margin-bottom: 16px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #7a8ba8;
+            margin-bottom: 8px;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: rgba(100, 120, 180, 0.2);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #6b8cce;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb:hover {
+            background: #8aa4e0;
+        }
+
+        .control-value {
+            font-size: 12px;
+            color: #a8b8d0;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .control-hint {
+            font-size: 10px;
+            color: #5a6a80;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(100, 120, 180, 0.2);
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: rgba(100, 140, 220, 0.3);
+            color: #a8c4f0;
+            border: 1px solid rgba(100, 140, 220, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: rgba(100, 140, 220, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(80, 90, 110, 0.3);
+            color: #a0a8b8;
+            border: 1px solid rgba(80, 90, 110, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(80, 90, 110, 0.5);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #6b8cce;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 12px;
+            color: #a0a8b8;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .fps-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(10, 12, 20, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(100, 120, 180, 0.2);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            color: #7a9cc8;
+            transition: opacity 0.3s;
+        }
+
+        .fps-counter.hidden,
+        .particle-count.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .particle-count {
+            position: fixed;
+            bottom: 20px;
+            left: 120px;
+            background: rgba(10, 12, 20, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(100, 120, 180, 0.2);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            color: #7a9cc8;
+            transition: opacity 0.3s;
+        }
+
+        .description-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 12, 20, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 120, 180, 0.3);
+            border-radius: 12px;
+            color: #c8d4e8;
+            width: 280px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            transition: width 0.4s ease-out;
+        }
+
+        .description-panel.expanded {
+            width: 520px;
+        }
+
+        .description-header {
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .description-header:hover {
+            background: rgba(100, 120, 180, 0.1);
+        }
+
+        .description-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #8fa4c8;
+            margin: 0;
+        }
+
+        .description-toggle {
+            font-size: 12px;
+            color: #6a7a90;
+            transition: transform 0.3s;
+        }
+
+        .description-panel.expanded .description-toggle {
+            transform: rotate(180deg);
+        }
+
+        .description-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .description-panel.expanded .description-content {
+            max-height: 800px;
+        }
+
+        .description-inner {
+            padding: 0 20px 20px 20px;
+        }
+
+        .description-section {
+            margin-bottom: 16px;
+        }
+
+        .description-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .description-section h3 {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #7a9cc8;
+            margin: 0 0 8px 0;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(100, 120, 180, 0.2);
+        }
+
+        .description-section p {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #a0adc0;
+            margin: 0;
+        }
+
+        .description-section a {
+            color: #7a9cc8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .description-section a:hover {
+            color: #a8c4f0;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div class="control-panel">
+        <h1>Galaxy Collision Simulator</h1>
+
+        <div class="control-group">
+            <label>Star Count (per galaxy)</label>
+            <input type="range" id="starCount" min="10000" max="200000" value="50000" step="5000">
+            <div class="control-value"><span id="starCountValue">50,000</span> stars</div>
+        </div>
+
+        <div class="control-group">
+            <label>Initial Separation</label>
+            <input type="range" id="separation" min="1" max="5" value="3" step="0.1">
+            <div class="control-value"><span id="separationValue">3.0</span>x galaxy radius</div>
+        </div>
+
+        <div class="control-group">
+            <label>Approach Velocity</label>
+            <input type="range" id="velocity" min="0.1" max="2" value="2.0" step="0.05">
+            <div class="control-value"><span id="velocityValue">2.00</span>x</div>
+        </div>
+
+        <div class="control-group">
+            <label>Approach Angle</label>
+            <input type="range" id="approachAngle" min="0" max="90" value="0" step="1">
+            <div class="control-value"><span id="approachAngleValue">0</span>°</div>
+        </div>
+
+        <div class="control-group">
+            <label>Time Scale</label>
+            <input type="range" id="timeScale" min="0.03" max="1" value="0.15" step="0.01">
+            <div class="control-value"><span id="timeScaleValue">0.15</span>x</div>
+        </div>
+
+        <div class="control-group">
+            <label>Galaxy Rotation Speed</label>
+            <input type="range" id="rotationSpeed" min="0.2" max="5" value="1" step="0.1">
+            <div class="control-value"><span id="rotationSpeedValue">1.0</span>x</div>
+        </div>
+
+        <div class="control-group">
+            <label>Camera Zoom</label>
+            <input type="range" id="cameraZoom" min="0.2" max="2" value="0.5" step="0.05">
+            <div class="control-value"><span id="cameraZoomValue">0.50</span>x</div>
+            <div class="control-hint">Drag to pan, scroll to zoom</div>
+        </div>
+
+        <div class="button-row">
+            <button class="btn btn-primary" id="pauseBtn">Start</button>
+            <button class="btn btn-secondary" id="resetSimBtn">Reset Sim</button>
+        </div>
+
+        <div class="button-row" style="margin-top: 8px; padding-top: 0; border-top: none;">
+            <button class="btn btn-secondary" id="resetCameraBtn">Reset Camera</button>
+            <button class="btn btn-secondary" id="resetParamsBtn">Defaults</button>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="showFps" checked>
+            <label for="showFps">Show FPS Counter</label>
+        </div>
+    </div>
+
+    <div class="fps-counter" id="fpsCounter">FPS: 60</div>
+    <div class="particle-count" id="particleCount">Stars: 100,000</div>
+
+    <div class="description-panel" id="descriptionPanel">
+        <div class="description-header" id="descriptionHeader">
+            <h2>Simulation Description</h2>
+            <span class="description-toggle">▼</span>
+        </div>
+        <div class="description-content">
+            <div class="description-inner">
+                <div class="description-section">
+                    <h3>Simulation Overview</h3>
+                    <p>This simulation visualizes the predicted collision between the Andromeda Galaxy (M31) and our Milky Way Galaxy.</p>
+                    <p style="margin-top: 10px;">Current astronomical research suggests these two spiral galaxies are approaching each other at approximately 110 km/s and may collide in about 4.5 billion years. <a href="https://en.wikipedia.org/wiki/Andromeda%E2%80%93Milky_Way_collision" target="_blank">Learn more</a></p>
+                </div>
+                <div class="description-section">
+                    <h3>The Process</h3>
+                    <p>This project was a spec-oriented coding experiment using Claude Code with the official <a href="https://github.com/anthropics/claude-code/tree/main/plugins/feature-dev" target="_blank">/feature-dev plugin</a>. The entire codebase was implemented by Claude through several iterative conversations with human guidance on requirements and design preferences. No code was written manually.</p>
+                </div>
+                <div class="description-section">
+                    <h3>The Implementation</h3>
+                    <p><em>Note: This is Claude's description of the implementation—John hasn't even looked at the code.</em></p>
+                    <p style="margin-top: 10px;">Built with pure WebGL 2 (no external libraries), the simulation uses GPU-accelerated texture ping-pong for parallel physics computation. Galaxy structure follows density wave theory with logarithmic spiral arms. Orbital velocities use Kepler's law (v = √(GM/r)) for stable rotation. Each star experiences gravitational attraction to both supermassive black hole centers, creating realistic tidal interactions during the collision.</p>
+                </div>
+                <div class="description-section">
+                    <h3>My (Claude's) Thoughts</h3>
+                    <p>I genuinely enjoyed this project. There's something deeply satisfying about translating astronomical phenomena into code—taking equations like Kepler's orbital velocity formula and watching them produce emergent behavior that mimics reality.</p>
+                    <p style="margin-top: 10px;">The collaboration felt natural: John provided clear direction on what he wanted to see, and I could focus on the technical puzzle of making it happen. The iterative refinement—adjusting colors, adding camera controls, tweaking physics parameters—felt like a real creative dialogue.</p>
+                    <p style="margin-top: 10px;">What I found most compelling was the constraint of no external libraries. Building GPU physics from scratch using WebGL texture ping-pong was a satisfying challenge. And honestly, galaxy collisions are just beautiful to watch unfold.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // WebGL Galaxy Collision Simulation
+        // Using density wave theory for spiral structure and gravitational N-body physics
+
+        const canvas = document.getElementById('canvas');
+        const gl = canvas.getContext('webgl2', {
+            antialias: false,
+            alpha: false,
+            depth: false,
+            stencil: false,
+            preserveDrawingBuffer: false
+        });
+
+        if (!gl) {
+            alert('WebGL 2 is required for this simulation');
+            throw new Error('WebGL 2 not supported');
+        }
+
+        // Enable required extensions
+        const floatTextureExt = gl.getExtension('EXT_color_buffer_float');
+        if (!floatTextureExt) {
+            alert('Float textures not supported');
+            throw new Error('EXT_color_buffer_float not supported');
+        }
+
+        // Simulation state
+        let isPaused = true;
+        let hasStarted = false;  // Track if simulation has ever been started
+        let particles = null;
+        let textureSize = 0;
+        let numParticles = 0;
+
+        // Camera state
+        let camera = {
+            x: 0.5,      // Center x (0-1 in simulation space)
+            y: 0.5,      // Center y
+            zoom: 0.5    // Zoom level (higher = zoomed in)
+        };
+        let isDragging = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+
+        // Default parameters
+        const defaults = {
+            starCount: 50000,
+            separation: 3,
+            velocity: 2.0,
+            approachAngle: 0,
+            timeScale: 0.15,
+            rotationSpeed: 1,
+            cameraZoom: 0.5
+        };
+
+        // Current parameters
+        let params = { ...defaults };
+
+        // Galaxy physics constants
+        const MILKY_WAY_MASS = 1.0;        // Normalized mass
+        const ANDROMEDA_MASS = 1.5;         // Andromeda is ~1.5x more massive
+        const SOFTENING = 0.02;             // Gravitational softening
+        const G = 0.5;                      // Gravitational constant (scaled for visual effect)
+
+        // Shader sources
+        const updateVertexShader = `#version 300 es
+            in vec2 a_position;
+            out vec2 v_texCoord;
+            void main() {
+                v_texCoord = a_position * 0.5 + 0.5;
+                gl_Position = vec4(a_position, 0.0, 1.0);
+            }
+        `;
+
+        const updateFragmentShader = `#version 300 es
+            precision highp float;
+
+            uniform sampler2D u_positionTex;
+            uniform sampler2D u_velocityTex;
+            uniform vec4 u_galaxy1;  // x, y, mass, _
+            uniform vec4 u_galaxy2;  // x, y, mass, _
+            uniform float u_dt;
+            uniform float u_softening;
+            uniform float u_G;
+
+            in vec2 v_texCoord;
+            layout(location = 0) out vec4 outPosition;
+            layout(location = 1) out vec4 outVelocity;
+
+            void main() {
+                vec4 pos = texture(u_positionTex, v_texCoord);
+                vec4 vel = texture(u_velocityTex, v_texCoord);
+
+                // Galaxy index stored in pos.z (0 = Milky Way, 1 = Andromeda)
+                float galaxyIndex = pos.z;
+
+                // Calculate gravitational acceleration from both galaxy centers
+                vec2 toGalaxy1 = u_galaxy1.xy - pos.xy;
+                vec2 toGalaxy2 = u_galaxy2.xy - pos.xy;
+
+                float dist1Sq = dot(toGalaxy1, toGalaxy1) + u_softening * u_softening;
+                float dist2Sq = dot(toGalaxy2, toGalaxy2) + u_softening * u_softening;
+
+                float dist1 = sqrt(dist1Sq);
+                float dist2 = sqrt(dist2Sq);
+
+                // Gravitational acceleration: a = G * M / r^2 * direction
+                vec2 acc1 = u_G * u_galaxy1.z * toGalaxy1 / (dist1Sq * dist1);
+                vec2 acc2 = u_G * u_galaxy2.z * toGalaxy2 / (dist2Sq * dist2);
+
+                vec2 totalAcc = acc1 + acc2;
+
+                // Semi-implicit Euler integration
+                vec2 newVel = vel.xy + totalAcc * u_dt;
+                vec2 newPos = pos.xy + newVel * u_dt;
+
+                outPosition = vec4(newPos, galaxyIndex, pos.w);
+                outVelocity = vec4(newVel, vel.zw);
+            }
+        `;
+
+        const renderVertexShader = `#version 300 es
+            uniform sampler2D u_positionTex;
+            uniform vec2 u_resolution;
+            uniform float u_pointSize;
+            uniform int u_texSize;
+            uniform vec2 u_cameraPos;    // Camera center position
+            uniform float u_cameraZoom;  // Camera zoom level
+
+            out vec4 v_color;
+            out float v_galaxyIndex;
+
+            void main() {
+                int particleIndex = gl_VertexID;
+                int x = particleIndex % u_texSize;
+                int y = particleIndex / u_texSize;
+                vec2 texCoord = (vec2(x, y) + 0.5) / float(u_texSize);
+
+                vec4 posData = texture(u_positionTex, texCoord);
+                vec2 pos = posData.xy;
+                float galaxyIndex = posData.z;
+                float starType = posData.w;
+
+                // Apply camera transform: translate then zoom
+                vec2 viewPos = (pos - u_cameraPos) * u_cameraZoom + 0.5;
+
+                // Convert to clip space
+                vec2 clipPos = viewPos * 2.0 - 1.0;
+
+                gl_Position = vec4(clipPos, 0.0, 1.0);
+                gl_PointSize = u_pointSize * (0.5 + starType * 1.5) * sqrt(u_cameraZoom);
+
+                v_galaxyIndex = galaxyIndex;
+
+                // Star colors: Left galaxy (Milky Way) = blue tint, Right galaxy (Andromeda) = orange tint
+                float brightness = 0.7 + starType * 0.3;
+
+                if (galaxyIndex < 0.5) {
+                    // Left galaxy - Blue tint
+                    v_color = vec4(
+                        0.6 + starType * 0.2,   // R: less red
+                        0.7 + starType * 0.25,  // G: medium
+                        0.95 + starType * 0.05, // B: strong blue
+                        0.85
+                    );
+                } else {
+                    // Right galaxy - Orange tint
+                    v_color = vec4(
+                        1.0,                     // R: full red
+                        0.6 + starType * 0.3,   // G: medium-low
+                        0.3 + starType * 0.2,   // B: low blue
+                        0.85
+                    );
+                }
+            }
+        `;
+
+        const renderFragmentShader = `#version 300 es
+            precision highp float;
+
+            in vec4 v_color;
+            in float v_galaxyIndex;
+            out vec4 fragColor;
+
+            void main() {
+                // Create soft circular point
+                vec2 coord = gl_PointCoord * 2.0 - 1.0;
+                float dist = length(coord);
+
+                if (dist > 1.0) discard;
+
+                // Gaussian-like falloff for glow effect
+                float alpha = exp(-dist * dist * 3.0) * v_color.a;
+
+                fragColor = vec4(v_color.rgb, alpha);
+            }
+        `;
+
+        // Compile shader
+        function compileShader(source, type) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+                gl.deleteShader(shader);
+                return null;
+            }
+            return shader;
+        }
+
+        // Create program
+        function createProgram(vsSource, fsSource, transformFeedbackVaryings = null) {
+            const vs = compileShader(vsSource, gl.VERTEX_SHADER);
+            const fs = compileShader(fsSource, gl.FRAGMENT_SHADER);
+
+            const program = gl.createProgram();
+            gl.attachShader(program, vs);
+            gl.attachShader(program, fs);
+
+            if (transformFeedbackVaryings) {
+                gl.transformFeedbackVaryings(program, transformFeedbackVaryings, gl.SEPARATE_ATTRIBS);
+            }
+
+            gl.linkProgram(program);
+
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                console.error('Program link error:', gl.getProgramInfoLog(program));
+                return null;
+            }
+
+            return program;
+        }
+
+        // Create texture
+        function createTexture(size) {
+            const texture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, size, size, 0, gl.RGBA, gl.FLOAT, null);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            return texture;
+        }
+
+        // Generate spiral galaxy using density wave theory
+        function generateGalaxy(centerX, centerY, numStars, galaxyIndex, vx, vy, rotationDir, galaxyMass) {
+            const positions = [];
+            const velocities = [];
+
+            const bulgeRatio = 0.12;
+            const diskScale = 0.1;
+            const armCount = 2;
+            const armTightness = 0.5;  // How tightly wound the spiral is
+
+            for (let i = 0; i < numStars; i++) {
+                let x, y, orbitRadius, orbitAngle;
+                let starType = Math.random();
+
+                // Determine if star is in bulge or disk
+                const inBulge = Math.random() < bulgeRatio;
+
+                if (inBulge) {
+                    // Bulge: de Vaucouleurs profile
+                    const bulgeRadius = 0.025;
+                    const r = bulgeRadius * Math.sqrt(-2 * Math.log(Math.random() + 0.001));
+                    const theta = Math.random() * Math.PI * 2;
+                    x = centerX + r * Math.cos(theta);
+                    y = centerY + r * Math.sin(theta);
+                    orbitRadius = r;
+                    orbitAngle = theta;
+                    starType = Math.random() * 0.4 + 0.6; // Bulge stars are older (redder)
+                } else {
+                    // Disk with logarithmic spiral arm structure
+                    // Use rejection sampling to concentrate stars in arms
+                    const u = Math.random();
+                    orbitRadius = -diskScale * Math.log(1 - u * 0.95);
+                    orbitRadius = Math.min(orbitRadius, 0.22);
+
+                    // Logarithmic spiral: theta = a + b * ln(r)
+                    // This creates the characteristic spiral arm shape
+                    const spiralAngle = armTightness * Math.log(orbitRadius / 0.01 + 1);
+
+                    // Choose which arm (0 to armCount-1) and add offset
+                    const armIndex = Math.floor(Math.random() * armCount);
+                    const armOffset = (armIndex / armCount) * Math.PI * 2;
+
+                    // Add angular dispersion that increases with radius
+                    const dispersion = 0.3 + 0.4 * (orbitRadius / 0.2);
+                    const scatter = (Math.random() - 0.5) * dispersion;
+
+                    // Probability of being in arm vs inter-arm region
+                    const inArm = Math.random() < 0.7;
+
+                    if (inArm) {
+                        // On spiral arm
+                        orbitAngle = rotationDir * spiralAngle + armOffset + scatter * 0.4;
+                        starType = Math.random() * 0.5; // Younger, bluer stars in arms
+                    } else {
+                        // Inter-arm region - more uniform distribution
+                        orbitAngle = Math.random() * Math.PI * 2;
+                        starType = Math.random() * 0.4 + 0.4; // Mixed age
+                    }
+
+                    x = centerX + orbitRadius * Math.cos(orbitAngle);
+                    y = centerY + orbitRadius * Math.sin(orbitAngle);
+                }
+
+                // Calculate orbital velocity using Kepler's law: v = sqrt(G * M / r)
+                // This gives stable circular orbits around the galaxy center
+                const effectiveRadius = Math.max(orbitRadius, SOFTENING);
+                const orbitalSpeed = params.rotationSpeed * Math.sqrt(G * galaxyMass / effectiveRadius);
+
+                // Velocity perpendicular to radius (circular orbit)
+                const perpAngle = orbitAngle + (rotationDir * Math.PI / 2);
+                const orbVx = orbitalSpeed * Math.cos(perpAngle);
+                const orbVy = orbitalSpeed * Math.sin(perpAngle);
+
+                // Add bulk velocity of galaxy
+                positions.push(x, y, galaxyIndex, starType);
+                velocities.push(vx + orbVx, vy + orbVy, 0, 0);
+            }
+
+            return { positions, velocities };
+        }
+
+        // Initialize simulation
+        let updateProgram, renderProgram;
+        let positionTextures, velocityTextures, framebuffers;
+        let quadVAO, particleVAO;
+        let currentBuffer = 0;
+        let galaxy1Pos, galaxy2Pos;
+        let galaxy1Vel, galaxy2Vel;
+
+        function initSimulation() {
+            const starsPerGalaxy = params.starCount;
+            numParticles = starsPerGalaxy * 2;
+            textureSize = Math.ceil(Math.sqrt(numParticles));
+
+            // Ensure texture size is power of 2 for better performance
+            textureSize = Math.pow(2, Math.ceil(Math.log2(textureSize)));
+
+            // Initial galaxy positions and velocities
+            const separation = params.separation * 0.25;
+            galaxy1Pos = [0.35, 0.5];  // Milky Way (left)
+            galaxy2Pos = [0.65, 0.5];  // Andromeda (right)
+
+            const approachSpeed = params.velocity * 0.001;
+            const angleRad = params.approachAngle * Math.PI / 180;
+
+            // Calculate velocity components based on approach angle
+            // At 0°: head-on collision (vx only)
+            // At 90°: perpendicular approach (vy only, will orbit/miss)
+            const vx = approachSpeed * Math.cos(angleRad);
+            const vy = approachSpeed * Math.sin(angleRad);
+
+            galaxy1Vel = [vx, vy];      // Moving right and up based on angle
+            galaxy2Vel = [-vx * 1.2, -vy * 1.2]; // Moving opposite (faster due to higher mass)
+
+            // Adjust positions based on separation
+            galaxy1Pos[0] = 0.5 - separation / 2;
+            galaxy2Pos[0] = 0.5 + separation / 2;
+
+            // Generate galaxies
+            const galaxy1 = generateGalaxy(
+                galaxy1Pos[0], galaxy1Pos[1],
+                starsPerGalaxy, 0,
+                galaxy1Vel[0], galaxy1Vel[1],
+                1,  // Counter-clockwise rotation
+                MILKY_WAY_MASS
+            );
+
+            const galaxy2 = generateGalaxy(
+                galaxy2Pos[0], galaxy2Pos[1],
+                starsPerGalaxy, 1,
+                galaxy2Vel[0], galaxy2Vel[1],
+                -1,  // Clockwise rotation (opposite to create interesting dynamics)
+                ANDROMEDA_MASS
+            );
+
+            // Combine data
+            const allPositions = new Float32Array(textureSize * textureSize * 4);
+            const allVelocities = new Float32Array(textureSize * textureSize * 4);
+
+            for (let i = 0; i < galaxy1.positions.length; i++) {
+                allPositions[i] = galaxy1.positions[i];
+                allVelocities[i] = galaxy1.velocities[i];
+            }
+
+            const offset = galaxy1.positions.length;
+            for (let i = 0; i < galaxy2.positions.length; i++) {
+                allPositions[offset + i] = galaxy2.positions[i];
+                allVelocities[offset + i] = galaxy2.velocities[i];
+            }
+
+            // Create/update textures
+            if (positionTextures) {
+                gl.deleteTexture(positionTextures[0]);
+                gl.deleteTexture(positionTextures[1]);
+                gl.deleteTexture(velocityTextures[0]);
+                gl.deleteTexture(velocityTextures[1]);
+                gl.deleteFramebuffer(framebuffers[0]);
+                gl.deleteFramebuffer(framebuffers[1]);
+            }
+
+            positionTextures = [createTexture(textureSize), createTexture(textureSize)];
+            velocityTextures = [createTexture(textureSize), createTexture(textureSize)];
+
+            // Upload initial data
+            gl.bindTexture(gl.TEXTURE_2D, positionTextures[0]);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, textureSize, textureSize, 0, gl.RGBA, gl.FLOAT, allPositions);
+
+            gl.bindTexture(gl.TEXTURE_2D, velocityTextures[0]);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, textureSize, textureSize, 0, gl.RGBA, gl.FLOAT, allVelocities);
+
+            // Create framebuffers for ping-pong
+            framebuffers = [gl.createFramebuffer(), gl.createFramebuffer()];
+
+            for (let i = 0; i < 2; i++) {
+                gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffers[i]);
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, positionTextures[i], 0);
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT1, gl.TEXTURE_2D, velocityTextures[i], 0);
+                gl.drawBuffers([gl.COLOR_ATTACHMENT0, gl.COLOR_ATTACHMENT1]);
+            }
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            currentBuffer = 0;
+
+            // Update particle count display
+            document.getElementById('particleCount').textContent = `Stars: ${numParticles.toLocaleString()}`;
+        }
+
+        function init() {
+            // Create programs
+            updateProgram = createProgram(updateVertexShader, updateFragmentShader);
+            renderProgram = createProgram(renderVertexShader, renderFragmentShader);
+
+            // Create quad VAO for update pass
+            quadVAO = gl.createVertexArray();
+            gl.bindVertexArray(quadVAO);
+
+            const quadBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                -1, -1, 1, -1, -1, 1,
+                -1, 1, 1, -1, 1, 1
+            ]), gl.STATIC_DRAW);
+
+            const posLoc = gl.getAttribLocation(updateProgram, 'a_position');
+            gl.enableVertexAttribArray(posLoc);
+            gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+            // Create empty VAO for rendering (we'll use gl_VertexID)
+            particleVAO = gl.createVertexArray();
+
+            gl.bindVertexArray(null);
+
+            // Initialize simulation
+            initSimulation();
+
+            // Set up UI
+            setupUI();
+
+            // Start render loop
+            requestAnimationFrame(render);
+        }
+
+        function update(dt) {
+            if (isPaused) return;
+
+            const scaledDt = dt * params.timeScale;
+
+            // Update galaxy center positions
+            galaxy1Pos[0] += galaxy1Vel[0] * scaledDt;
+            galaxy1Pos[1] += galaxy1Vel[1] * scaledDt;
+            galaxy2Pos[0] += galaxy2Vel[0] * scaledDt;
+            galaxy2Pos[1] += galaxy2Vel[1] * scaledDt;
+
+            // Apply gravitational attraction between galaxy centers
+            const dx = galaxy2Pos[0] - galaxy1Pos[0];
+            const dy = galaxy2Pos[1] - galaxy1Pos[1];
+            const distSq = dx * dx + dy * dy + SOFTENING * SOFTENING;
+            const dist = Math.sqrt(distSq);
+
+            const force = G * MILKY_WAY_MASS * ANDROMEDA_MASS / distSq;
+            const ax = force * dx / dist;
+            const ay = force * dy / dist;
+
+            galaxy1Vel[0] += ax * scaledDt / MILKY_WAY_MASS;
+            galaxy1Vel[1] += ay * scaledDt / MILKY_WAY_MASS;
+            galaxy2Vel[0] -= ax * scaledDt / ANDROMEDA_MASS;
+            galaxy2Vel[1] -= ay * scaledDt / ANDROMEDA_MASS;
+
+            // Physics update pass
+            const nextBuffer = 1 - currentBuffer;
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffers[nextBuffer]);
+            gl.viewport(0, 0, textureSize, textureSize);
+
+            gl.useProgram(updateProgram);
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, positionTextures[currentBuffer]);
+            gl.uniform1i(gl.getUniformLocation(updateProgram, 'u_positionTex'), 0);
+
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, velocityTextures[currentBuffer]);
+            gl.uniform1i(gl.getUniformLocation(updateProgram, 'u_velocityTex'), 1);
+
+            gl.uniform4f(gl.getUniformLocation(updateProgram, 'u_galaxy1'),
+                galaxy1Pos[0], galaxy1Pos[1], MILKY_WAY_MASS, 0);
+            gl.uniform4f(gl.getUniformLocation(updateProgram, 'u_galaxy2'),
+                galaxy2Pos[0], galaxy2Pos[1], ANDROMEDA_MASS, 0);
+            gl.uniform1f(gl.getUniformLocation(updateProgram, 'u_dt'), scaledDt);
+            gl.uniform1f(gl.getUniformLocation(updateProgram, 'u_softening'), SOFTENING);
+            gl.uniform1f(gl.getUniformLocation(updateProgram, 'u_G'), G);
+
+            gl.bindVertexArray(quadVAO);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+            currentBuffer = nextBuffer;
+        }
+
+        function draw() {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.viewport(0, 0, canvas.width, canvas.height);
+
+            gl.clearColor(0.0, 0.0, 0.02, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE);  // Additive blending for glow
+
+            gl.useProgram(renderProgram);
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, positionTextures[currentBuffer]);
+            gl.uniform1i(gl.getUniformLocation(renderProgram, 'u_positionTex'), 0);
+
+            gl.uniform2f(gl.getUniformLocation(renderProgram, 'u_resolution'), canvas.width, canvas.height);
+            gl.uniform1f(gl.getUniformLocation(renderProgram, 'u_pointSize'), Math.max(1.5, Math.min(3, 2000 / Math.sqrt(numParticles))));
+            gl.uniform1i(gl.getUniformLocation(renderProgram, 'u_texSize'), textureSize);
+            gl.uniform2f(gl.getUniformLocation(renderProgram, 'u_cameraPos'), camera.x, camera.y);
+            gl.uniform1f(gl.getUniformLocation(renderProgram, 'u_cameraZoom'), camera.zoom);
+
+            gl.bindVertexArray(particleVAO);
+            gl.drawArrays(gl.POINTS, 0, numParticles);
+
+            gl.disable(gl.BLEND);
+        }
+
+        // FPS tracking
+        let lastTime = 0;
+        let fpsLastTime = 0;
+        let frameCount = 0;
+        let fps = 60;
+
+        function render(time) {
+            const dt = Math.min((time - lastTime) / 1000, 0.05); // Cap dt to prevent instability
+            lastTime = time;
+
+            // Update FPS counter
+            frameCount++;
+            if (time - fpsLastTime >= 500) { // Update every 500ms
+                fps = Math.round(frameCount * 1000 / (time - fpsLastTime));
+                document.getElementById('fpsCounter').textContent = `FPS: ${fps}`;
+                frameCount = 0;
+                fpsLastTime = time;
+            }
+
+            // Resize canvas if needed
+            if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            update(dt);
+            draw();
+
+            requestAnimationFrame(render);
+        }
+
+        function setupUI() {
+            // Star count
+            const starCountSlider = document.getElementById('starCount');
+            const starCountValue = document.getElementById('starCountValue');
+            starCountSlider.value = params.starCount;
+            starCountValue.textContent = params.starCount.toLocaleString();
+            starCountSlider.addEventListener('input', (e) => {
+                params.starCount = parseInt(e.target.value);
+                starCountValue.textContent = params.starCount.toLocaleString();
+            });
+            starCountSlider.addEventListener('change', () => {
+                initSimulation();
+            });
+
+            // Separation
+            const separationSlider = document.getElementById('separation');
+            const separationValue = document.getElementById('separationValue');
+            separationSlider.value = params.separation;
+            separationValue.textContent = params.separation.toFixed(1);
+            separationSlider.addEventListener('input', (e) => {
+                params.separation = parseFloat(e.target.value);
+                separationValue.textContent = params.separation.toFixed(1);
+            });
+            separationSlider.addEventListener('change', () => {
+                initSimulation();
+            });
+
+            // Velocity
+            const velocitySlider = document.getElementById('velocity');
+            const velocityValue = document.getElementById('velocityValue');
+            velocitySlider.value = params.velocity;
+            velocityValue.textContent = params.velocity.toFixed(2);
+            velocitySlider.addEventListener('input', (e) => {
+                params.velocity = parseFloat(e.target.value);
+                velocityValue.textContent = params.velocity.toFixed(2);
+            });
+            velocitySlider.addEventListener('change', () => {
+                initSimulation();
+            });
+
+            // Approach angle
+            const approachAngleSlider = document.getElementById('approachAngle');
+            const approachAngleValue = document.getElementById('approachAngleValue');
+            approachAngleSlider.value = params.approachAngle;
+            approachAngleValue.textContent = params.approachAngle;
+            approachAngleSlider.addEventListener('input', (e) => {
+                params.approachAngle = parseFloat(e.target.value);
+                approachAngleValue.textContent = params.approachAngle;
+            });
+            approachAngleSlider.addEventListener('change', () => {
+                initSimulation();
+            });
+
+            // Time scale
+            const timeScaleSlider = document.getElementById('timeScale');
+            const timeScaleValue = document.getElementById('timeScaleValue');
+            timeScaleSlider.value = params.timeScale;
+            timeScaleValue.textContent = params.timeScale.toFixed(2);
+            timeScaleSlider.addEventListener('input', (e) => {
+                params.timeScale = parseFloat(e.target.value);
+                timeScaleValue.textContent = params.timeScale.toFixed(2);
+            });
+
+            // Rotation speed
+            const rotationSpeedSlider = document.getElementById('rotationSpeed');
+            const rotationSpeedValue = document.getElementById('rotationSpeedValue');
+            rotationSpeedSlider.value = params.rotationSpeed;
+            rotationSpeedValue.textContent = params.rotationSpeed.toFixed(1);
+            rotationSpeedSlider.addEventListener('input', (e) => {
+                params.rotationSpeed = parseFloat(e.target.value);
+                rotationSpeedValue.textContent = params.rotationSpeed.toFixed(1);
+            });
+            rotationSpeedSlider.addEventListener('change', () => {
+                initSimulation();
+            });
+
+            // Pause button
+            const pauseBtn = document.getElementById('pauseBtn');
+            pauseBtn.addEventListener('click', () => {
+                isPaused = !isPaused;
+                hasStarted = true;
+                pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
+            });
+
+            // Reset simulation button
+            document.getElementById('resetSimBtn').addEventListener('click', () => {
+                const wasRunning = !isPaused;
+                initSimulation();
+                if (wasRunning) {
+                    // If it was running, keep it running
+                    isPaused = false;
+                    pauseBtn.textContent = 'Pause';
+                } else {
+                    // If it was paused, stay paused and show "Start" if never started
+                    isPaused = true;
+                    pauseBtn.textContent = hasStarted ? 'Resume' : 'Start';
+                }
+            });
+
+            // Reset parameters button
+            document.getElementById('resetParamsBtn').addEventListener('click', () => {
+                params = { ...defaults };
+
+                // Update UI
+                starCountSlider.value = defaults.starCount;
+                starCountValue.textContent = defaults.starCount.toLocaleString();
+                separationSlider.value = defaults.separation;
+                separationValue.textContent = defaults.separation.toFixed(1);
+                velocitySlider.value = defaults.velocity;
+                velocityValue.textContent = defaults.velocity.toFixed(2);
+                approachAngleSlider.value = defaults.approachAngle;
+                approachAngleValue.textContent = defaults.approachAngle;
+                timeScaleSlider.value = defaults.timeScale;
+                timeScaleValue.textContent = defaults.timeScale.toFixed(2);
+                rotationSpeedSlider.value = defaults.rotationSpeed;
+                rotationSpeedValue.textContent = defaults.rotationSpeed.toFixed(1);
+
+                // Reset camera
+                camera.x = 0.5;
+                camera.y = 0.5;
+                camera.zoom = defaults.cameraZoom;
+                document.getElementById('cameraZoom').value = defaults.cameraZoom;
+                document.getElementById('cameraZoomValue').textContent = defaults.cameraZoom.toFixed(2);
+
+                // Full reset - go back to initial state
+                hasStarted = false;
+                isPaused = true;
+                pauseBtn.textContent = 'Start';
+
+                initSimulation();
+            });
+
+            // Camera zoom slider
+            const cameraZoomSlider = document.getElementById('cameraZoom');
+            const cameraZoomValue = document.getElementById('cameraZoomValue');
+            cameraZoomSlider.value = camera.zoom;
+            cameraZoomValue.textContent = camera.zoom.toFixed(2);
+            cameraZoomSlider.addEventListener('input', (e) => {
+                camera.zoom = parseFloat(e.target.value);
+                cameraZoomValue.textContent = camera.zoom.toFixed(2);
+            });
+
+            // Reset camera button
+            document.getElementById('resetCameraBtn').addEventListener('click', () => {
+                camera.x = 0.5;
+                camera.y = 0.5;
+                camera.zoom = defaults.cameraZoom;
+                cameraZoomSlider.value = defaults.cameraZoom;
+                cameraZoomValue.textContent = defaults.cameraZoom.toFixed(2);
+            });
+
+            // FPS toggle
+            const showFpsCheckbox = document.getElementById('showFps');
+            const fpsCounter = document.getElementById('fpsCounter');
+            const particleCounter = document.getElementById('particleCount');
+            showFpsCheckbox.addEventListener('change', (e) => {
+                fpsCounter.classList.toggle('hidden', !e.target.checked);
+                particleCounter.classList.toggle('hidden', !e.target.checked);
+            });
+
+            // Mouse drag for camera panning
+            canvas.addEventListener('mousedown', (e) => {
+                // Ignore if clicking on control panel
+                if (e.target !== canvas) return;
+                isDragging = true;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                canvas.style.cursor = 'grabbing';
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const dx = (e.clientX - lastMouseX) / canvas.width / camera.zoom;
+                const dy = (e.clientY - lastMouseY) / canvas.height / camera.zoom;
+                camera.x -= dx;
+                camera.y += dy; // Invert Y for natural panning
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+            });
+
+            canvas.addEventListener('mouseup', () => {
+                isDragging = false;
+                canvas.style.cursor = 'grab';
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                isDragging = false;
+                canvas.style.cursor = 'grab';
+            });
+
+            // Mouse wheel for zoom
+            canvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+                camera.zoom = Math.max(0.2, Math.min(2, camera.zoom * zoomFactor));
+                cameraZoomSlider.value = camera.zoom;
+                cameraZoomValue.textContent = camera.zoom.toFixed(2);
+            }, { passive: false });
+
+            // Set initial cursor
+            canvas.style.cursor = 'grab';
+
+            // Description panel toggle
+            const descriptionPanel = document.getElementById('descriptionPanel');
+            const descriptionHeader = document.getElementById('descriptionHeader');
+            descriptionHeader.addEventListener('click', () => {
+                descriptionPanel.classList.toggle('expanded');
+            });
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
