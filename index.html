@@ -31,10 +31,24 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(100, 120, 180, 0.3);
             border-radius: 12px;
-            padding: 20px;
             color: #c8d4e8;
             min-width: 280px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .control-panel-header {
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .control-panel-header:hover {
+            background: rgba(100, 120, 180, 0.1);
         }
 
         .control-panel h1 {
@@ -43,9 +57,41 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: #8fa4c8;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(100, 120, 180, 0.2);
+            margin: 0;
+        }
+
+        .control-panel-toggle {
+            font-size: 12px;
+            color: #6a7a90;
+            transition: transform 0.3s;
+        }
+
+        .control-panel.expanded .control-panel-toggle {
+            transform: rotate(180deg);
+        }
+
+        .control-panel-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .control-panel.expanded .control-panel-content {
+            max-height: 600px;
+        }
+
+        .control-panel-inner {
+            padding: 0 20px 16px 20px;
+            border-top: 1px solid rgba(100, 120, 180, 0.2);
+        }
+
+        .control-panel-always-visible {
+            padding: 12px 20px 16px 20px;
+        }
+
+        .control-panel.expanded .control-panel-always-visible {
+            padding-top: 0;
+            border-top: 1px solid rgba(100, 120, 180, 0.2);
         }
 
         .control-group {
@@ -107,9 +153,10 @@
         .button-row {
             display: flex;
             gap: 8px;
+        }
+
+        .button-row-top {
             margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(100, 120, 180, 0.2);
         }
 
         .btn {
@@ -304,70 +351,219 @@
             color: #a8c4f0;
             text-decoration: underline;
         }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .control-panel {
+                display: none;
+            }
+
+            .description-panel {
+                display: none;
+            }
+
+            .mobile-panel {
+                display: block;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                background: rgba(10, 12, 20, 0.92);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(100, 120, 180, 0.3);
+                border-radius: 12px;
+                color: #c8d4e8;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+                overflow: hidden;
+                max-width: 400px;
+            }
+
+            .mobile-panel-header {
+                display: flex;
+                align-items: center;
+                padding: 12px 16px;
+                user-select: none;
+            }
+
+            .mobile-panel-title {
+                flex: 1;
+                font-size: 13px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1.2px;
+                color: #8fa4c8;
+                cursor: pointer;
+                padding: 4px 0;
+            }
+
+            .mobile-panel-title:hover {
+                color: #a8c4f0;
+            }
+
+            .mobile-panel-toggle-btn {
+                font-size: 11px;
+                padding: 6px 12px;
+                background: rgba(100, 120, 180, 0.2);
+                border: 1px solid rgba(100, 120, 180, 0.3);
+                border-radius: 6px;
+                color: #8fa4c8;
+                cursor: pointer;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                transition: all 0.2s;
+            }
+
+            .mobile-panel-toggle-btn:hover {
+                background: rgba(100, 120, 180, 0.3);
+            }
+
+            .mobile-panel-collapse-icon {
+                font-size: 12px;
+                color: #6a7a90;
+                margin-right: 12px;
+                transition: transform 0.3s;
+                cursor: pointer;
+            }
+
+            .mobile-panel.expanded .mobile-panel-collapse-icon {
+                transform: rotate(180deg);
+            }
+
+            .mobile-panel-content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-out;
+            }
+
+            .mobile-panel.expanded .mobile-panel-content {
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+
+            .mobile-panel-inner {
+                padding: 0 16px 16px 16px;
+                border-top: 1px solid rgba(100, 120, 180, 0.2);
+            }
+
+            .mobile-panel-always-visible {
+                padding: 8px 16px 12px 16px;
+            }
+
+            .mobile-panel.expanded .mobile-panel-always-visible {
+                border-top: 1px solid rgba(100, 120, 180, 0.2);
+            }
+
+            .mobile-controls-view,
+            .mobile-description-view {
+                display: none;
+            }
+
+            .mobile-controls-view.active,
+            .mobile-description-view.active {
+                display: block;
+            }
+
+            .mobile-panel .control-group {
+                margin-bottom: 12px;
+            }
+
+            .mobile-panel .control-group label {
+                font-size: 10px;
+            }
+
+            .mobile-panel .btn {
+                padding: 12px 10px;
+                font-size: 12px;
+            }
+
+            .fps-counter {
+                bottom: 10px;
+                left: 10px;
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+
+            .particle-count {
+                bottom: 10px;
+                left: 100px;
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+        }
+
+        /* Hide mobile panel on desktop */
+        @media (min-width: 769px) {
+            .mobile-panel {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
 
-    <div class="control-panel">
-        <h1>Galaxy Collision Simulator</h1>
-
-        <div class="control-group">
-            <label>Star Count (per galaxy)</label>
-            <input type="range" id="starCount" min="10000" max="200000" value="50000" step="5000">
-            <div class="control-value"><span id="starCountValue">50,000</span> stars</div>
+    <div class="control-panel expanded" id="controlPanel">
+        <div class="control-panel-header" id="controlPanelHeader">
+            <h1>Galaxy Collision Simulator</h1>
+            <span class="control-panel-toggle">▼</span>
         </div>
 
-        <div class="control-group">
-            <label>Initial Separation</label>
-            <input type="range" id="separation" min="1" max="5" value="3" step="0.1">
-            <div class="control-value"><span id="separationValue">3.0</span>x galaxy radius</div>
+        <div class="control-panel-content">
+            <div class="control-panel-inner">
+                <div class="control-group">
+                    <label>Star Count (per galaxy)</label>
+                    <input type="range" id="starCount" min="10000" max="200000" value="50000" step="5000">
+                    <div class="control-value"><span id="starCountValue">50,000</span> stars</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Initial Separation</label>
+                    <input type="range" id="separation" min="1" max="5" value="3" step="0.1">
+                    <div class="control-value"><span id="separationValue">3.0</span>x galaxy radius</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Approach Velocity</label>
+                    <input type="range" id="velocity" min="0.1" max="2" value="2.0" step="0.05">
+                    <div class="control-value"><span id="velocityValue">2.00</span>x</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Time Scale</label>
+                    <input type="range" id="timeScale" min="0.03" max="1" value="0.15" step="0.01">
+                    <div class="control-value"><span id="timeScaleValue">0.15</span>x</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Galaxy Rotation Speed</label>
+                    <input type="range" id="rotationSpeed" min="0.2" max="5" value="1" step="0.1">
+                    <div class="control-value"><span id="rotationSpeedValue">1.0</span>x</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Camera Zoom</label>
+                    <input type="range" id="cameraZoom" min="0.2" max="2" value="0.5" step="0.05">
+                    <div class="control-value"><span id="cameraZoomValue">0.50</span>x</div>
+                    <div class="control-hint">Drag to pan, scroll to zoom</div>
+                </div>
+
+                <div class="button-row button-row-top">
+                    <button class="btn btn-secondary" id="resetCameraBtn">Reset Camera</button>
+                    <button class="btn btn-secondary" id="resetParamsBtn">Defaults</button>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="showFps" checked>
+                    <label for="showFps">Show FPS Counter</label>
+                </div>
+            </div>
         </div>
 
-        <div class="control-group">
-            <label>Approach Velocity</label>
-            <input type="range" id="velocity" min="0.1" max="2" value="2.0" step="0.05">
-            <div class="control-value"><span id="velocityValue">2.00</span>x</div>
-        </div>
-
-        <div class="control-group">
-            <label>Approach Angle</label>
-            <input type="range" id="approachAngle" min="0" max="90" value="0" step="1">
-            <div class="control-value"><span id="approachAngleValue">0</span>°</div>
-        </div>
-
-        <div class="control-group">
-            <label>Time Scale</label>
-            <input type="range" id="timeScale" min="0.03" max="1" value="0.15" step="0.01">
-            <div class="control-value"><span id="timeScaleValue">0.15</span>x</div>
-        </div>
-
-        <div class="control-group">
-            <label>Galaxy Rotation Speed</label>
-            <input type="range" id="rotationSpeed" min="0.2" max="5" value="1" step="0.1">
-            <div class="control-value"><span id="rotationSpeedValue">1.0</span>x</div>
-        </div>
-
-        <div class="control-group">
-            <label>Camera Zoom</label>
-            <input type="range" id="cameraZoom" min="0.2" max="2" value="0.5" step="0.05">
-            <div class="control-value"><span id="cameraZoomValue">0.50</span>x</div>
-            <div class="control-hint">Drag to pan, scroll to zoom</div>
-        </div>
-
-        <div class="button-row">
-            <button class="btn btn-primary" id="pauseBtn">Start</button>
-            <button class="btn btn-secondary" id="resetSimBtn">Reset Sim</button>
-        </div>
-
-        <div class="button-row" style="margin-top: 8px; padding-top: 0; border-top: none;">
-            <button class="btn btn-secondary" id="resetCameraBtn">Reset Camera</button>
-            <button class="btn btn-secondary" id="resetParamsBtn">Defaults</button>
-        </div>
-
-        <div class="checkbox-group">
-            <input type="checkbox" id="showFps" checked>
-            <label for="showFps">Show FPS Counter</label>
+        <div class="control-panel-always-visible">
+            <div class="button-row">
+                <button class="btn btn-primary" id="pauseBtn">Start</button>
+                <button class="btn btn-secondary" id="resetSimBtn">Reset Sim</button>
+            </div>
         </div>
     </div>
 
@@ -401,6 +597,86 @@
                     <p style="margin-top: 10px;">The collaboration felt natural: John provided clear direction on what he wanted to see, and I could focus on the technical puzzle of making it happen. The iterative refinement—adjusting colors, adding camera controls, tweaking physics parameters—felt like a real creative dialogue.</p>
                     <p style="margin-top: 10px;">What I found most compelling was the constraint of no external libraries. Building GPU physics from scratch using WebGL texture ping-pong was a satisfying challenge. And honestly, galaxy collisions are just beautiful to watch unfold.</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Panel (shown on small screens) -->
+    <div class="mobile-panel expanded" id="mobilePanel">
+        <div class="mobile-panel-header">
+            <span class="mobile-panel-collapse-icon" id="mobilePanelCollapseIcon">▼</span>
+            <div class="mobile-panel-title" id="mobilePanelTitle">Controls</div>
+            <button class="mobile-panel-toggle-btn" id="mobilePanelToggleBtn">Info</button>
+        </div>
+
+        <div class="mobile-panel-content">
+            <div class="mobile-panel-inner">
+                <!-- Controls View -->
+                <div class="mobile-controls-view active" id="mobileControlsView">
+                    <div class="control-group">
+                        <label>Star Count (per galaxy)</label>
+                        <input type="range" id="mobileStarCount" min="10000" max="200000" value="50000" step="5000">
+                        <div class="control-value"><span id="mobileStarCountValue">50,000</span> stars</div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Initial Separation</label>
+                        <input type="range" id="mobileSeparation" min="1" max="5" value="3" step="0.1">
+                        <div class="control-value"><span id="mobileSeparationValue">3.0</span>x galaxy radius</div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Approach Velocity</label>
+                        <input type="range" id="mobileVelocity" min="0.1" max="2" value="2.0" step="0.05">
+                        <div class="control-value"><span id="mobileVelocityValue">2.00</span>x</div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Time Scale</label>
+                        <input type="range" id="mobileTimeScale" min="0.03" max="1" value="0.15" step="0.01">
+                        <div class="control-value"><span id="mobileTimeScaleValue">0.15</span>x</div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Galaxy Rotation Speed</label>
+                        <input type="range" id="mobileRotationSpeed" min="0.2" max="5" value="1" step="0.1">
+                        <div class="control-value"><span id="mobileRotationSpeedValue">1.0</span>x</div>
+                    </div>
+
+                    <div class="button-row button-row-top">
+                        <button class="btn btn-secondary" id="mobileResetParamsBtn">Defaults</button>
+                    </div>
+                </div>
+
+                <!-- Description View -->
+                <div class="mobile-description-view" id="mobileDescriptionView">
+                    <div class="description-section">
+                        <h3>Simulation Overview</h3>
+                        <p>This simulation visualizes the predicted collision between the Andromeda Galaxy (M31) and our Milky Way Galaxy.</p>
+                        <p style="margin-top: 10px;">Current astronomical research suggests these two spiral galaxies are approaching each other at approximately 110 km/s and may collide in about 4.5 billion years.</p>
+                    </div>
+                    <div class="description-section">
+                        <h3>The Process</h3>
+                        <p>This project was a spec-oriented coding experiment using Claude Code. The entire codebase was implemented by Claude through several iterative conversations with human guidance on requirements and design preferences.</p>
+                    </div>
+                    <div class="description-section">
+                        <h3>The Implementation</h3>
+                        <p>Built with pure WebGL 2 (no external libraries), the simulation uses GPU-accelerated texture ping-pong for parallel physics computation. Galaxy structure follows density wave theory with logarithmic spiral arms.</p>
+                    </div>
+                    <div class="description-section">
+                        <h3>My (Claude's) Thoughts</h3>
+                        <p>I genuinely enjoyed this project. There's something deeply satisfying about translating astronomical phenomena into code—taking equations like Kepler's orbital velocity formula and watching them produce emergent behavior that mimics reality.</p>
+                        <p style="margin-top: 10px;">The collaboration felt natural: John provided clear direction on what he wanted to see, and I could focus on the technical puzzle of making it happen. The iterative refinement—adjusting colors, adding camera controls, tweaking physics parameters—felt like a real creative dialogue.</p>
+                        <p style="margin-top: 10px;">What I found most compelling was the constraint of no external libraries. Building GPU physics from scratch using WebGL texture ping-pong was a satisfying challenge. And honestly, galaxy collisions are just beautiful to watch unfold.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mobile-panel-always-visible">
+            <div class="button-row">
+                <button class="btn btn-primary" id="mobilePauseBtn">Start</button>
+                <button class="btn btn-secondary" id="mobileResetSimBtn">Reset Sim</button>
             </div>
         </div>
     </div>
@@ -452,7 +728,6 @@
             starCount: 50000,
             separation: 3,
             velocity: 2.0,
-            approachAngle: 0,
             timeScale: 0.15,
             rotationSpeed: 1,
             cameraZoom: 0.5
@@ -753,16 +1028,10 @@
             galaxy2Pos = [0.65, 0.5];  // Andromeda (right)
 
             const approachSpeed = params.velocity * 0.001;
-            const angleRad = params.approachAngle * Math.PI / 180;
 
-            // Calculate velocity components based on approach angle
-            // At 0°: head-on collision (vx only)
-            // At 90°: perpendicular approach (vy only, will orbit/miss)
-            const vx = approachSpeed * Math.cos(angleRad);
-            const vy = approachSpeed * Math.sin(angleRad);
-
-            galaxy1Vel = [vx, vy];      // Moving right and up based on angle
-            galaxy2Vel = [-vx * 1.2, -vy * 1.2]; // Moving opposite (faster due to higher mass)
+            // Head-on collision: galaxies move directly toward each other
+            galaxy1Vel = [approachSpeed, 0];
+            galaxy2Vel = [-approachSpeed * 1.2, 0];
 
             // Adjust positions based on separation
             galaxy1Pos[0] = 0.5 - separation / 2;
@@ -988,6 +1257,41 @@
         }
 
         function setupUI() {
+            // Control panel collapse toggle
+            const controlPanel = document.getElementById('controlPanel');
+            const controlPanelHeader = document.getElementById('controlPanelHeader');
+            controlPanelHeader.addEventListener('click', () => {
+                controlPanel.classList.toggle('expanded');
+            });
+
+            // Helper to sync slider values between desktop and mobile
+            function syncSliders(desktopId, mobileId, valueId, mobileValueId, paramName, formatter, onChange) {
+                const desktopSlider = document.getElementById(desktopId);
+                const mobileSlider = document.getElementById(mobileId);
+                const desktopValue = document.getElementById(valueId);
+                const mobileValue = document.getElementById(mobileValueId);
+
+                const updateValue = (value) => {
+                    params[paramName] = parseFloat(value);
+                    const formatted = formatter(params[paramName]);
+                    desktopValue.textContent = formatted;
+                    mobileValue.textContent = formatted;
+                    desktopSlider.value = value;
+                    mobileSlider.value = value;
+                };
+
+                desktopSlider.addEventListener('input', (e) => updateValue(e.target.value));
+                mobileSlider.addEventListener('input', (e) => updateValue(e.target.value));
+
+                if (onChange) {
+                    desktopSlider.addEventListener('change', onChange);
+                    mobileSlider.addEventListener('change', onChange);
+                }
+
+                // Initialize
+                updateValue(params[paramName]);
+            }
+
             // Star count
             const starCountSlider = document.getElementById('starCount');
             const starCountValue = document.getElementById('starCountValue');
@@ -996,113 +1300,95 @@
             starCountSlider.addEventListener('input', (e) => {
                 params.starCount = parseInt(e.target.value);
                 starCountValue.textContent = params.starCount.toLocaleString();
+                document.getElementById('mobileStarCount').value = e.target.value;
+                document.getElementById('mobileStarCountValue').textContent = params.starCount.toLocaleString();
             });
             starCountSlider.addEventListener('change', () => {
                 initSimulation();
             });
 
-            // Separation
-            const separationSlider = document.getElementById('separation');
-            const separationValue = document.getElementById('separationValue');
-            separationSlider.value = params.separation;
-            separationValue.textContent = params.separation.toFixed(1);
-            separationSlider.addEventListener('input', (e) => {
-                params.separation = parseFloat(e.target.value);
-                separationValue.textContent = params.separation.toFixed(1);
+            // Mobile star count
+            const mobileStarCountSlider = document.getElementById('mobileStarCount');
+            const mobileStarCountValue = document.getElementById('mobileStarCountValue');
+            mobileStarCountSlider.addEventListener('input', (e) => {
+                params.starCount = parseInt(e.target.value);
+                mobileStarCountValue.textContent = params.starCount.toLocaleString();
+                starCountSlider.value = e.target.value;
+                starCountValue.textContent = params.starCount.toLocaleString();
             });
-            separationSlider.addEventListener('change', () => {
+            mobileStarCountSlider.addEventListener('change', () => {
                 initSimulation();
             });
 
-            // Velocity
-            const velocitySlider = document.getElementById('velocity');
-            const velocityValue = document.getElementById('velocityValue');
-            velocitySlider.value = params.velocity;
-            velocityValue.textContent = params.velocity.toFixed(2);
-            velocitySlider.addEventListener('input', (e) => {
-                params.velocity = parseFloat(e.target.value);
-                velocityValue.textContent = params.velocity.toFixed(2);
-            });
-            velocitySlider.addEventListener('change', () => {
-                initSimulation();
-            });
+            // Separation (synced)
+            syncSliders('separation', 'mobileSeparation', 'separationValue', 'mobileSeparationValue',
+                'separation', v => v.toFixed(1), () => initSimulation());
 
-            // Approach angle
-            const approachAngleSlider = document.getElementById('approachAngle');
-            const approachAngleValue = document.getElementById('approachAngleValue');
-            approachAngleSlider.value = params.approachAngle;
-            approachAngleValue.textContent = params.approachAngle;
-            approachAngleSlider.addEventListener('input', (e) => {
-                params.approachAngle = parseFloat(e.target.value);
-                approachAngleValue.textContent = params.approachAngle;
-            });
-            approachAngleSlider.addEventListener('change', () => {
-                initSimulation();
-            });
+            // Velocity (synced)
+            syncSliders('velocity', 'mobileVelocity', 'velocityValue', 'mobileVelocityValue',
+                'velocity', v => v.toFixed(2), () => initSimulation());
 
-            // Time scale
-            const timeScaleSlider = document.getElementById('timeScale');
-            const timeScaleValue = document.getElementById('timeScaleValue');
-            timeScaleSlider.value = params.timeScale;
-            timeScaleValue.textContent = params.timeScale.toFixed(2);
-            timeScaleSlider.addEventListener('input', (e) => {
-                params.timeScale = parseFloat(e.target.value);
-                timeScaleValue.textContent = params.timeScale.toFixed(2);
-            });
+            // Time scale (synced)
+            syncSliders('timeScale', 'mobileTimeScale', 'timeScaleValue', 'mobileTimeScaleValue',
+                'timeScale', v => v.toFixed(2), null);
 
-            // Rotation speed
-            const rotationSpeedSlider = document.getElementById('rotationSpeed');
-            const rotationSpeedValue = document.getElementById('rotationSpeedValue');
-            rotationSpeedSlider.value = params.rotationSpeed;
-            rotationSpeedValue.textContent = params.rotationSpeed.toFixed(1);
-            rotationSpeedSlider.addEventListener('input', (e) => {
-                params.rotationSpeed = parseFloat(e.target.value);
-                rotationSpeedValue.textContent = params.rotationSpeed.toFixed(1);
-            });
-            rotationSpeedSlider.addEventListener('change', () => {
-                initSimulation();
-            });
+            // Rotation speed (synced)
+            syncSliders('rotationSpeed', 'mobileRotationSpeed', 'rotationSpeedValue', 'mobileRotationSpeedValue',
+                'rotationSpeed', v => v.toFixed(1), () => initSimulation());
 
-            // Pause button
+            // Pause button (desktop and mobile synced)
             const pauseBtn = document.getElementById('pauseBtn');
-            pauseBtn.addEventListener('click', () => {
+            const mobilePauseBtn = document.getElementById('mobilePauseBtn');
+
+            function togglePause() {
                 isPaused = !isPaused;
                 hasStarted = true;
-                pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
-            });
+                const text = isPaused ? 'Resume' : 'Pause';
+                pauseBtn.textContent = text;
+                mobilePauseBtn.textContent = text;
+            }
 
-            // Reset simulation button
-            document.getElementById('resetSimBtn').addEventListener('click', () => {
+            pauseBtn.addEventListener('click', togglePause);
+            mobilePauseBtn.addEventListener('click', togglePause);
+
+            // Reset simulation button (desktop and mobile synced)
+            function resetSimulation() {
                 const wasRunning = !isPaused;
                 initSimulation();
                 if (wasRunning) {
-                    // If it was running, keep it running
                     isPaused = false;
                     pauseBtn.textContent = 'Pause';
+                    mobilePauseBtn.textContent = 'Pause';
                 } else {
-                    // If it was paused, stay paused and show "Start" if never started
                     isPaused = true;
-                    pauseBtn.textContent = hasStarted ? 'Resume' : 'Start';
+                    const text = hasStarted ? 'Resume' : 'Start';
+                    pauseBtn.textContent = text;
+                    mobilePauseBtn.textContent = text;
                 }
-            });
+            }
 
-            // Reset parameters button
-            document.getElementById('resetParamsBtn').addEventListener('click', () => {
+            document.getElementById('resetSimBtn').addEventListener('click', resetSimulation);
+            document.getElementById('mobileResetSimBtn').addEventListener('click', resetSimulation);
+
+            // Reset parameters button (desktop and mobile synced)
+            function resetParams() {
                 params = { ...defaults };
 
-                // Update UI
-                starCountSlider.value = defaults.starCount;
-                starCountValue.textContent = defaults.starCount.toLocaleString();
-                separationSlider.value = defaults.separation;
-                separationValue.textContent = defaults.separation.toFixed(1);
-                velocitySlider.value = defaults.velocity;
-                velocityValue.textContent = defaults.velocity.toFixed(2);
-                approachAngleSlider.value = defaults.approachAngle;
-                approachAngleValue.textContent = defaults.approachAngle;
-                timeScaleSlider.value = defaults.timeScale;
-                timeScaleValue.textContent = defaults.timeScale.toFixed(2);
-                rotationSpeedSlider.value = defaults.rotationSpeed;
-                rotationSpeedValue.textContent = defaults.rotationSpeed.toFixed(1);
+                // Update all synced sliders
+                const sliderConfigs = [
+                    ['starCount', 'mobileStarCount', 'starCountValue', 'mobileStarCountValue', defaults.starCount, v => v.toLocaleString()],
+                    ['separation', 'mobileSeparation', 'separationValue', 'mobileSeparationValue', defaults.separation, v => v.toFixed(1)],
+                    ['velocity', 'mobileVelocity', 'velocityValue', 'mobileVelocityValue', defaults.velocity, v => v.toFixed(2)],
+                    ['timeScale', 'mobileTimeScale', 'timeScaleValue', 'mobileTimeScaleValue', defaults.timeScale, v => v.toFixed(2)],
+                    ['rotationSpeed', 'mobileRotationSpeed', 'rotationSpeedValue', 'mobileRotationSpeedValue', defaults.rotationSpeed, v => v.toFixed(1)]
+                ];
+
+                sliderConfigs.forEach(([desktopId, mobileId, valueId, mobileValueId, value, formatter]) => {
+                    document.getElementById(desktopId).value = value;
+                    document.getElementById(mobileId).value = value;
+                    document.getElementById(valueId).textContent = formatter(value);
+                    document.getElementById(mobileValueId).textContent = formatter(value);
+                });
 
                 // Reset camera
                 camera.x = 0.5;
@@ -1115,9 +1401,13 @@
                 hasStarted = false;
                 isPaused = true;
                 pauseBtn.textContent = 'Start';
+                mobilePauseBtn.textContent = 'Start';
 
                 initSimulation();
-            });
+            }
+
+            document.getElementById('resetParamsBtn').addEventListener('click', resetParams);
+            document.getElementById('mobileResetParamsBtn').addEventListener('click', resetParams);
 
             // Camera zoom slider
             const cameraZoomSlider = document.getElementById('cameraZoom');
@@ -1194,6 +1484,111 @@
             const descriptionHeader = document.getElementById('descriptionHeader');
             descriptionHeader.addEventListener('click', () => {
                 descriptionPanel.classList.toggle('expanded');
+            });
+
+            // Mobile panel controls
+            const mobilePanel = document.getElementById('mobilePanel');
+            const mobilePanelTitle = document.getElementById('mobilePanelTitle');
+            const mobilePanelToggleBtn = document.getElementById('mobilePanelToggleBtn');
+            const mobileControlsView = document.getElementById('mobileControlsView');
+            const mobileDescriptionView = document.getElementById('mobileDescriptionView');
+            let mobileViewMode = 'controls'; // 'controls' or 'info'
+
+            // Toggle collapse when clicking title or collapse icon
+            const mobilePanelCollapseIcon = document.getElementById('mobilePanelCollapseIcon');
+            const toggleMobilePanel = () => mobilePanel.classList.toggle('expanded');
+            mobilePanelTitle.addEventListener('click', toggleMobilePanel);
+            mobilePanelCollapseIcon.addEventListener('click', toggleMobilePanel);
+
+            // Toggle between Controls and Info
+            mobilePanelToggleBtn.addEventListener('click', () => {
+                if (mobileViewMode === 'controls') {
+                    mobileViewMode = 'info';
+                    mobilePanelTitle.textContent = 'Info';
+                    mobilePanelToggleBtn.textContent = 'Controls';
+                    mobileControlsView.classList.remove('active');
+                    mobileDescriptionView.classList.add('active');
+                } else {
+                    mobileViewMode = 'controls';
+                    mobilePanelTitle.textContent = 'Controls';
+                    mobilePanelToggleBtn.textContent = 'Info';
+                    mobileControlsView.classList.add('active');
+                    mobileDescriptionView.classList.remove('active');
+                }
+            });
+
+            // Touch support for pan and zoom
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchStartDist = 0;
+            let touchStartZoom = 0;
+            let isTouching = false;
+            let isPinching = false;
+
+            function getTouchDistance(touches) {
+                const dx = touches[0].clientX - touches[1].clientX;
+                const dy = touches[0].clientY - touches[1].clientY;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+
+            function getTouchCenter(touches) {
+                return {
+                    x: (touches[0].clientX + touches[1].clientX) / 2,
+                    y: (touches[0].clientY + touches[1].clientY) / 2
+                };
+            }
+
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isTouching = true;
+                    isPinching = false;
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                } else if (e.touches.length === 2) {
+                    isPinching = true;
+                    isTouching = false;
+                    touchStartDist = getTouchDistance(e.touches);
+                    touchStartZoom = camera.zoom;
+                }
+                e.preventDefault();
+            }, { passive: false });
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (isTouching && e.touches.length === 1) {
+                    // Pan
+                    const dx = (e.touches[0].clientX - touchStartX) / canvas.width / camera.zoom;
+                    const dy = (e.touches[0].clientY - touchStartY) / canvas.height / camera.zoom;
+                    camera.x -= dx;
+                    camera.y += dy;
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                } else if (isPinching && e.touches.length === 2) {
+                    // Pinch to zoom
+                    const currentDist = getTouchDistance(e.touches);
+                    const scale = currentDist / touchStartDist;
+                    camera.zoom = Math.max(0.2, Math.min(2, touchStartZoom * scale));
+                    cameraZoomSlider.value = camera.zoom;
+                    cameraZoomValue.textContent = camera.zoom.toFixed(2);
+                }
+                e.preventDefault();
+            }, { passive: false });
+
+            canvas.addEventListener('touchend', (e) => {
+                if (e.touches.length === 0) {
+                    isTouching = false;
+                    isPinching = false;
+                } else if (e.touches.length === 1) {
+                    // Switched from pinch to single touch
+                    isPinching = false;
+                    isTouching = true;
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }
+            });
+
+            canvas.addEventListener('touchcancel', () => {
+                isTouching = false;
+                isPinching = false;
             });
         }
 
